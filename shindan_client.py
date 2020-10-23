@@ -1,5 +1,3 @@
-# httpアクセスするためのプログラム
-
 import urllib
 from pyquery import PyQuery as pq
 
