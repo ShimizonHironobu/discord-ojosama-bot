@@ -19,7 +19,8 @@ def request(id, name='おじょうさま'):
 
     """
 
-    #診断結果のページを取得
+    #診断結果のページを取得 
+    # data postするパラメータ
     data = urllib.parse.urlencode({'u': name}).encode('utf-8')
     request = urllib.request.Request('https://shindanmaker.com/' + id, data)
     response = urllib.request.urlopen(request)
