@@ -17,7 +17,7 @@ def info(message='', log_name='') :
     """
 
     #ログ書き込み インフォ
-    write_log(message, log_name, 'INFO')
+    write_log(message, log_name, logging.INFO)
 
 
 
@@ -35,7 +35,7 @@ def debug(message='', log_name='') :
     """
 
     #ログ書き込み デバッグ
-    write_log(message, log_name, 'DEBUG')
+    write_log(message, log_name, logging.DEBUG)
 
 
 
@@ -52,8 +52,8 @@ def warning(message='', log_name='') :
 
     """
 
-    #ログ書き込み エラーログ
-    write_log(message, log_name, 'WARNING')
+    #ログ書き込み 警告
+    write_log(message, log_name, logging.WARNING)
 
 
 
@@ -70,8 +70,8 @@ def error(message='', log_name='') :
 
     """
 
-    #ログ書き込み エラーログ
-    write_log(message, log_name, 'ERROR')
+    #ログ書き込み エラー
+    write_log(message, log_name, logging.ERROR)
 
 
 
@@ -88,8 +88,8 @@ def critical(message='', log_name='') :
 
     """
 
-    #ログ書き込み エラーログ
-    write_log(message, log_name, 'CRITICAL')
+    #ログ書き込み クリティカル
+    write_log(message, log_name, logging.CRITICAL)
 
 
 
@@ -102,7 +102,7 @@ def write_log(message, log_name, log_type) :
     ----------
     message : string ログメッセージ
     log_name : string ログファイル名
-    log_type : string ログタイプ 'INFO' 'DEBUG' 'ERROR'
+    log_type : int ログタイプ loging.INFO loging.DEBUG loging.ERROR loging.WARNING loging.CRITICAL
     ----------
 
     """
@@ -125,13 +125,13 @@ def write_log(message, log_name, log_type) :
     #ハンドラー設定
     logger.addHandler(file_handler)
 
-    if log_type == 'INFO' :
+    if log_type == logging.INFO :
         logger.info(message)
-    elif log_type == 'DEBUG' :
+    elif log_type == logging.DEBUG :
         logger.debug(message)
-    elif log_type == 'ERROR' :
+    elif log_type == logging.ERROR :
         logger.error(message)
-    elif log_type == 'WARNING' :
+    elif log_type == logging.WARNING :
         logger.warning(message)
-    elif log_type == 'CRITICAL' :
+    elif log_type == logging.CRITICAL :
         logger.critical(message)
