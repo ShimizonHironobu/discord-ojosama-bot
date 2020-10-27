@@ -47,9 +47,11 @@ async def on_message(message):
         shindan_id = shindan_list[random_index]["id"]
         await message.channel.send(shindan_client.request(shindan_id, name=str(random.random())))
 
-
-@bot.command
+    await bot.process_commands(message)
+    
+@bot.command()
 async def shindan_add(ctx, url):
+    print(url)
     result = shindan_client.add(url)
     message = "登録に成功しましたわ！"
     if (result == "2"):
@@ -57,5 +59,12 @@ async def shindan_add(ctx, url):
     if (result == "0"):
         message = "登録にしっぱいしましたの～～～～"
     await ctx.send(message)
+
+@bot.command()
+async def shindan_list(ctx):
+    result = shindan_client.get_list()
+    print(result)
+
+    await ctx.send("test message")
 
 bot.run(config.get('app.discord.bot_token'))
