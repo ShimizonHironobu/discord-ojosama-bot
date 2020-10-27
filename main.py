@@ -36,6 +36,6 @@ async def on_message(message):
         shindan_id_list = config.get('app.shindan.id')
         random_index = random.randrange(0, len(shindan_id_list)-1, 1)
         shindan_id = shindan_id_list[random_index]
-        await message.channel.send(shindan_client.request(shindan_id, str(message.author)))
+        await message.channel.send(shindan_client.request(shindan_id, name=str(message.author)))
 
 client.run(config.get('app.discord.bot_token'))
