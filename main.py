@@ -15,9 +15,6 @@ async def on_message(message):
     print('id: ' + str(message.author.id))
     print('----------------------------')
 
-    if message.author.id == 401738155159584769:
-        return
-
     if message.content.startswith('ごきげんよう'):
         print(str(message.author.id))
         await message.channel.send('くたばりなさい ' + str(message.author))
