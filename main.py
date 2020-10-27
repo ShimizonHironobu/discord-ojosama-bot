@@ -51,13 +51,12 @@ async def on_message(message):
     
 @bot.command()
 async def shindan_add(ctx, url):
-    print(url)
     result = shindan_client.add(url)
     message = "登録に成功しましたわ！"
-    if (result == "2"):
+    if (result == 2):
         message = "既に登録に成功されておりますわ！"
-    if (result == "0"):
-        message = "登録にしっぱいしましたの～～～～"
+    if (result == 0):
+        message = "登録に失敗しましたの～～～～"
     await ctx.send(message)
 
 @bot.command()
