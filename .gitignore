@@ -1,4 +1,7 @@
-lib/__pycache__/
-__pycache__/config.cpython-39.pyc
-__pycache__/shindan_client.cpython-39.pyc
-__pycache__/http_client.cpython-39.pyc
+.pyc
+.idea
+venv
+config/app.json
+storage/
+!.gitkeep
+__pycache__/
