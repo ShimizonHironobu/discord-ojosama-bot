@@ -1,7 +1,10 @@
 import discord
 import random
+import sys
+import os
 from discord.ext import commands
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
 from lib import (
     config,
     shindan_client,
@@ -12,7 +15,7 @@ bot = commands.Bot(command_prefix="$")
 
 @bot.event
 async def on_ready():
-    print('{0.user}がログインいたしましたわ'.format(client))
+    print('{0.user}がログインいたしましたわ'.format(bot))
 
 @bot.event
 async def on_message(message):
