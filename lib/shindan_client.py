@@ -8,7 +8,8 @@ from pyquery import PyQuery as pq
 
 #診断メーカーのベースURL
 SHINDAN_MAKER_BASE_URL = 'https://shindanmaker.com/'
-SHINDAN_LIST_JSON_PATH = ''
+SHINDAN_LIST_DIR_PATH = config.get('app.storage.path')+'data/shidan/'
+SHINDAN_LIST_FILE_NAME = 'id_list.json'
 
 def request(id, name='おじょうさま'):
     '''
@@ -79,16 +80,14 @@ def add(url):
         shindan_id = url.replace(SHINDAN_MAKER_BASE_URL, '')
 
         # 診断リストpath生成
-        shindan_list_dir_path = config.get('app.storage.path')+'data/shidan/'
-        shindan_list_file_name = 'id_list.json'
-        shindan_file_path = shindan_list_dir_path + shindan_list_file_name
+        shindan_file_path = SHINDAN_LIST_DIR_PATH + SHINDAN_LIST_FILE_NAME
 
         # 保存する診断のデータ
         add_shindan_data = {'id' : shindan_id, 'name' : shindan_name}
 
         #診断リストディレクトリがなければ作成
-        if not os.path.isdir(shindan_list_dir_path) :
-            os.makedirs(shindan_list_dir_path)
+        if not os.path.isdir(SHINDAN_LIST_DIR_PATH) :
+            os.makedirs(SHINDAN_LIST_DIR_PATH)
 
         # 診断リストファイルがなければ作成
         if not os.path.exists(shindan_file_path) :
@@ -120,9 +119,59 @@ def add(url):
             edit_file.close()
 
     except Exception as e:
-        log.warning(e.message)
+        log.warning(e)
         return 0
 
     return 1
     
-print(add('https://shindanmaker.com/950470'))
+
+
+
+def get_list():
+    """
+
+    登録されている診断メーカーのリストを表示
+
+    Parameters
+    ----------
+    ----------
+
+    Parameters
+    ----------
+    list 
+    ----------
+
+    """
+
+    shindan_file_path = SHINDAN_LIST_DIR_PATH + SHINDAN_LIST_FILE_NAME
+
+    #診断リストディレクトリがなければ空リストを返す
+    if not os.path.isdir(SHINDAN_LIST_DIR_PATH) :
+        return []
+
+    # 診断リストファイルがなければ作成
+    if not os.path.exists(shindan_file_path) :
+       return []
+
+    if not os.path.getsize(shindan_file_path) :
+        return []
+
+    #診断リストに既に同じ診断がないかチェックを行うために読み込む
+    read_file = open(shindan_file_path, "r")
+    id_list_json = json.load(read_file)
+    read_file.close()
+    return id_list_json['data']
+
+
+
+
+'''
+デフォルトの追加リスト
+'''
+add('https://shindanmaker.com/950470');
+add('https://shindanmaker.com/950505');
+add('https://shindanmaker.com/950183');
+add('https://shindanmaker.com/949656');
+add('https://shindanmaker.com/949909');
+add('https://shindanmaker.com/950139');
+add('https://shindanmaker.com/950227');
