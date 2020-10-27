@@ -1,14 +1,19 @@
 import urllib
 import json
 import os
-import log
-import config
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from lib import (
+    log,
+    config
+)
 
 from pyquery import PyQuery as pq
 
 #診断メーカーのベースURL
 SHINDAN_MAKER_BASE_URL = 'https://shindanmaker.com/'
-SHINDAN_LIST_DIR_PATH = config.get('app.storage.path')+'data/shidan/'
+SHINDAN_LIST_DIR_PATH = os.path.dirname(__file__)+'/../'+config.get('app.storage.path')+'data/shidan/'
 SHINDAN_LIST_FILE_NAME = 'id_list.json'
 
 def request(id, name='おじょうさま'):
@@ -143,6 +148,7 @@ def get_list():
 
     """
 
+    # 診断リストのファイルパス
     shindan_file_path = SHINDAN_LIST_DIR_PATH + SHINDAN_LIST_FILE_NAME
 
     #診断リストディレクトリがなければ空リストを返す
@@ -163,15 +169,13 @@ def get_list():
     return id_list_json['data']
 
 
-
-
 '''
 デフォルトの追加リスト
 '''
-add('https://shindanmaker.com/950470');
-add('https://shindanmaker.com/950505');
-add('https://shindanmaker.com/950183');
-add('https://shindanmaker.com/949656');
-add('https://shindanmaker.com/949909');
-add('https://shindanmaker.com/950139');
-add('https://shindanmaker.com/950227');
+# add('https://shindanmaker.com/950470');
+# add('https://shindanmaker.com/950505');
+# add('https://shindanmaker.com/950183');
+# add('https://shindanmaker.com/949656');
+# add('https://shindanmaker.com/949909');
+# add('https://shindanmaker.com/950139');
+# add('https://shindanmaker.com/950227');
