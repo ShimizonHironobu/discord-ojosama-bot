@@ -3,7 +3,7 @@ import json
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from lib import (
     log,
     config
@@ -13,7 +13,7 @@ from pyquery import PyQuery as pq
 
 #診断メーカーのベースURL
 SHINDAN_MAKER_BASE_URL = 'https://shindanmaker.com/'
-SHINDAN_LIST_DIR_PATH = os.path.dirname(__file__)+'/../'+config.get('app.storage.path')+'data/shidan/'
+SHINDAN_LIST_DIR_PATH = os.path.dirname(os.path.abspath(__file__))+'/..'+config.get('app.storage.path')+'data/shidan/'
 SHINDAN_LIST_FILE_NAME = 'id_list.json'
 
 def request(id, name='おじょうさま'):
