@@ -1,5 +1,7 @@
 import discord
-
+import config
+import random
+import shindan_client
 client = discord.Client()
 
 @client.event
@@ -32,4 +34,11 @@ async def on_message(message):
     if message.content.startswith('おっぱいおおきいね'):
         await message.channel.send('Zカップですわ')
 
-client.run('NzY4ODgwNzA1NzUyNzkzMTMw.X5G59Q.tzr60B2M5biFgIPxsTds42SbbRI')
+    
+    if message.content.startswith('診断して'):
+        shindan_id_list = config.get('app.shindan.id')
+        random_index = random.randrange(0, len(shindan_id_list)-1, 1)
+        shindan_id = shindan_id_list[random_index]
+        await message.channel.send(shindan_client.request(shindan_id, str(message.author)))
+
+client.run(config.get('app.discord.bot_token'))
