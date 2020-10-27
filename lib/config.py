@@ -3,7 +3,7 @@ import json
 def get(param):
     param_array = param.split('.')
 
-    f = open("./config/"+param_array.pop(0)+".json", "r")
+    f = open("./../config/"+param_array.pop(0)+".json", "r")
     json_data = json.load(f)
     f.close()
 

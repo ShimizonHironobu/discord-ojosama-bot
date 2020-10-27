@@ -117,7 +117,7 @@ def write_log(message, log_name, log_type) :
 
     #出力先ファイル名を指定 logname-日付
     output_file_name = log_name+'-'+now_date if log_name != '' else now_date
-    log_dir = './log/'
+    log_dir = '.storage/logs/'
     file_handler = FileHandler(log_dir+output_file_name + '.log', 'a')
 
     #ログフォーマット設定

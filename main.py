@@ -1,7 +1,11 @@
 import discord
-import config
 import random
-import shindan_client
+
+from lib import (
+    config,
+    shindan_client
+)
+
 client = discord.Client()
 
 @client.event
