@@ -59,10 +59,36 @@ async def shindan_add(ctx, url):
     await ctx.send(message)
 
 @bot.command()
-async def shindan_list(ctx):
-    result = shindan_client.get_list()
-    print(result)
+async def shindan_list(ctx, page=1):
 
-    await ctx.send("test message")
+    # 診断リストを取得
+    shindan_list = shindan_client.get_list()
+    # 登録された診断の数を取得
+    shindan_len = len(shindan_list)
+    #リストの開始Noを決定
+    shindan_no = int(str(page - 1) + "1")
+    # ページ中の最大診断Noを決定
+    max_shindan_no = page * 10
+    # 総ページ数を計算
+    last_page = (shindan_len // 10) + (1 if shindan_len % 10 != 0 else 0)
+    # embed を作成
+    embed = discord.Embed(title="診断リスト",description="")
+
+    # チャットに表示するリストを生成
+    list_text = '\n\n'
+    if shindan_len != 0 :
+        while shindan_no <= max_shindan_no :
+            if shindan_no == shindan_len :
+                break
+            shindan_data = shindan_list[shindan_no-1]
+            list_text += str(shindan_no) + '.  [' + shindan_data['name'] + '](' + shindan_client.SHINDAN_MAKER_BASE_URL + shindan_data['id'] + ')    \n\n'
+            shindan_no+=1
+    else : 
+        list_text += 'なんの診断も登録されておりませんですのよ！！！！ \n'
+
+    # リストをセット
+    embed.add_field(name="登録された診断の一覧なのですわ～～～！！！！",  value=list_text, inline=True)
+    embed.set_footer(text='page ' + str(page) + '/' + str(last_page))
+    await ctx.send(embed=embed)
 
 bot.run(config.get('app.discord.bot_token'))
