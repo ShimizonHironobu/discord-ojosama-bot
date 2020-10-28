@@ -19,10 +19,10 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    # print('message: ' + message.content)
-    # print('author: ' + str(message.author))
-    # print('id: ' + str(message.author.id))
-    # print('----------------------------')
+    log.info('message: ' + message.content)
+    log.info('author: ' + str(message.author))
+    log.info('id: ' + str(message.author.id))
+    log.info('----------------------------')
 
     if message.content.startswith('ごきげんよう'):
         await message.channel.send('くたばりなさい ' + message.author.mention)
@@ -48,6 +48,7 @@ async def on_message(message):
 
     await bot.process_commands(message)
     
+
 @bot.command()
 async def shindan_add(ctx, url):
     result = shindan_client.add(url)
@@ -57,6 +58,8 @@ async def shindan_add(ctx, url):
     if (result == 0):
         message = "登録に失敗しましたの～～～～"
     await ctx.send(message)
+
+
 
 @bot.command()
 async def shindan_list(ctx, page=1):
@@ -90,5 +93,18 @@ async def shindan_list(ctx, page=1):
     embed.add_field(name="登録された診断の一覧なのですわ～～～！！！！",  value=list_text, inline=True)
     embed.set_footer(text='page ' + str(page) + '/' + str(last_page))
     await ctx.send(embed=embed)
+
+
+@bot.command()
+async def shindan(ctx, shindan_no, name="おじょうさま"):
+    shindan_list = shindan_client.get_list()
+    if not str.isdecimal(shindan_no) :  
+        await ctx.send("どの診断か分かりませんわ！")
+    if len(shindan_list) < int(shindan_no) :  
+        await ctx.send("どの診断か分かりませんわ！")
+
+    shindan_id = shindan_list[int(shindan_no) - 1]["id"]
+    await ctx.send(shindan_client.request(shindan_id, name))
+
 
 bot.run(config.get('app.discord.bot_token'))
