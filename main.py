@@ -11,7 +11,7 @@ from lib import (
     log
 )
 
-bot = commands.Bot(command_prefix="$")
+bot = commands.Bot(command_prefix="/")
 
 @bot.event
 async def on_ready():
@@ -25,8 +25,7 @@ async def on_message(message):
     # print('----------------------------')
 
     if message.content.startswith('ごきげんよう'):
-        print(str(message.author.id))
-        await message.channel.send('くたばりなさい ' + str(message.author))
+        await message.channel.send('くたばりなさい ' + message.author.mention)
 
     # if message.author.id == 700335402736680982:
     #     await message.channel.send('....あなたのことを愛していますわ❤️ ' + str(message.author))
