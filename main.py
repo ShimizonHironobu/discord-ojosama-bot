@@ -100,8 +100,11 @@ async def shindan(ctx, shindan_no, name="おじょうさま"):
     shindan_list = shindan_client.get_list()
     if not str.isdecimal(shindan_no) :  
         await ctx.send("どの診断か分かりませんわ！")
+        return 
+
     if len(shindan_list) < int(shindan_no) :  
         await ctx.send("どの診断か分かりませんわ！")
+        return 
 
     shindan_id = shindan_list[int(shindan_no) - 1]["id"]
     await ctx.send(shindan_client.request(shindan_id, name))
