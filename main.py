@@ -53,7 +53,7 @@ async def shindan_add(ctx, url):
     result = shindan_client.add(url)
     message = "登録に成功しましたわ！"
     if (result == 2):
-        message = "既に登録に成功されておりますわ！"
+        message = "既に登録されておりますわ！"
     if (result == 0):
         message = "登録に失敗しましたの～～～～"
     await ctx.send(message)
@@ -75,10 +75,10 @@ async def shindan_list(ctx, page=1):
     embed = discord.Embed(title="診断リスト",description="")
 
     # チャットに表示するリストを生成
-    list_text = '\n\n'
+    list_text = ''
     if shindan_len != 0 :
         while shindan_no <= max_shindan_no :
-            if shindan_no == shindan_len :
+            if shindan_no > shindan_len :
                 break
             shindan_data = shindan_list[shindan_no-1]
             list_text += str(shindan_no) + '.  [' + shindan_data['name'] + '](' + shindan_client.SHINDAN_MAKER_BASE_URL + shindan_data['id'] + ')    \n\n'
