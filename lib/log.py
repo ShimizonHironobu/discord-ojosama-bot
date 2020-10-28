@@ -1,7 +1,11 @@
 import datetime
 import logging
 from logging import getLogger, StreamHandler, FileHandler, Formatter
+import os
 
+from lib import (
+    config
+)
 
 def info(message='', log_name='') :
     """
@@ -117,7 +121,7 @@ def write_log(message, log_name, log_type) :
 
     #出力先ファイル名を指定 logname-日付
     output_file_name = log_name+'-'+now_date if log_name != '' else now_date
-    log_dir = './log/'
+    log_dir = os.path.dirname(os.path.abspath(__file__))+'/..'+config.get('app.storage.path')+'logs/'
     file_handler = FileHandler(log_dir+output_file_name + '.log', 'a')
 
     #ログフォーマット設定

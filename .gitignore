@@ -1,6 +1,7 @@
-__pycache__/
+.pyc
 .idea
 venv
 config/app.json
-log/*
+storage/
 !.gitkeep
+__pycache__/
