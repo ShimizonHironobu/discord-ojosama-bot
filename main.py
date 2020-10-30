@@ -4,13 +4,17 @@ import discord
 import random
 import sys
 import os
+import json
+import re
+
 from discord.ext import commands
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
 from lib import (
     config,
     shindan_client,
-    log
+    log,
+    markov
 )
 
 bot = commands.Bot(command_prefix="/")
@@ -28,6 +32,9 @@ async def on_message(message):
 
     if message.content.startswith('ごきげんよう'):
         await message.channel.send('くたばりなさい ' + message.author.mention)
+
+    if message.content.startswith('なんとかいってくださいまし'):
+        await message.channel.send(markov.make_markov_sentence())
 
     # if message.author.id == 700335402736680982:
     #     await message.channel.send('....あなたのことを愛していますわ❤️ ' + str(message.author))
@@ -110,6 +117,5 @@ async def shindan(ctx, shindan_no, name="おじょうさま"):
 
     shindan_id = shindan_list[int(shindan_no) - 1]["id"]
     await ctx.send(shindan_client.request(shindan_id, name))
-
 
 bot.run(config.get('app.discord.bot_token'))
