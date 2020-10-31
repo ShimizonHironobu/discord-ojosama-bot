@@ -30,24 +30,17 @@ async def on_message(message):
     log.info('id: ' + str(message.author.id))
     log.info('----------------------------')
 
-    if message.content.startswith('ごきげんよう'):
-        await message.channel.send('くたばりなさい ' + message.author.mention)
-
-    if message.content.startswith('なんとかいってくださいまし'):
-        await message.channel.send(markov.make_markov_sentence())
-
-    # if message.author.id == 700335402736680982:
-    #     await message.channel.send('....あなたのことを愛していますわ❤️ ' + str(message.author))
-
-    # if message.content.startswith('おぱんつみせて'):
-    #     if message.author.id == 700335402736680982:
-    #         await message.channel.send('もう、恥ずかしいですわ❤️ ' + str(message.author))
-    #     else:
-    #         await message.channel.send('しね' + str(message.author))
-
-    # if message.content.startswith('おっぱいおおきいね'):
-    #     await message.channel.send('Zカップですわ')
-
+    #botがメッセージ送信したものは無視
+    if message.author.id != bot.user.id :
+        if message.content.startswith('ごきげんよう'):
+            await message.channel.send('くたばりなさい ' + message.author.mention)
+            return
+        if message.content.startswith('なんとかいってくださいまし'):
+            await message.channel.send(markov.make_markov_sentence())
+            return
+            
+        # マルコフ連鎖のモデル生成用にメッセージを保存する。
+        markov.add_raw_message_data(message.content)
     
     if message.content.startswith('診断して'):
         shindan_list = shindan_client.get_list()

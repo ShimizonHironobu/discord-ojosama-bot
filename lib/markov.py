@@ -105,3 +105,25 @@ def make_markov_sentence():
 
 
 
+def add_raw_message_data(message_text):
+    #コードブロックのあるメッセージは飛ばす
+    if '`' in message_text :
+        return
+
+    #メッセージの中からURLを排除
+    message_text = re.sub(r"http(.+?)\s", '', message_text, flags=re.MULTILINE)
+    
+    #メッセージからメンションを排除
+    message_text = re.sub(r"@(.+?)\s", '', message_text, flags=re.MULTILINE)
+
+    #顔文字が入っている場合は飛ばす
+    if ':' in message_text :
+        return
+
+    #保存用ディレクトリがない場合は作成
+    if not os.path.isdir(MARCOV_DATA_DIR) :
+            os.makedirs(MARCOV_DATA_DIR)
+
+    with open(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME, 'a') as f:
+        print(message_text, file=f)
+    f.close()
