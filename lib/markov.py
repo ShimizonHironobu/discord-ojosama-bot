@@ -37,11 +37,15 @@ def format_text(t):
     return t
 
 def parse_text(filepath):
-    file = open(filepath, 'r').read()
+    f = open(filepath, 'r')
+    raw_data = f.read()
+    f.close()
 
     parsed_text = ''
-    for line in file.split("\n"):
+    for line in raw_data.split("\n"):
         parsed_text = parsed_text + MeCab.Tagger('-Owakati').parse(line)
+
+    
     return parsed_text
 
 def build_model(text, format=True, state_size=2):
@@ -75,7 +79,7 @@ def make_sentences(text, start=None, max=300, min=1, tries=100):
 def make_markov_sentence():
 
     format = True
-    max_chars = 50
+    max_chars = 30
     min_chars = 5
 
     #データの入ったディレクトリがなければ空文字を返す
@@ -90,16 +94,17 @@ def make_markov_sentence():
     parsed_text = parse_text(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME)
 
     text_model = build_model(parsed_text, format=format, state_size=3)
-    json = text_model.to_json()
+    # json = text_model.to_json()
     #モデルをバックアップする
-    open(MARCOV_DATA_DIR + 'markov_model.json', 'w').write(json)
+
+    # open(MARCOV_DATA_DIR + 'markov_model.json', 'w').write(json).
 
     sentence = None
-    while True : 
-        #連鎖による文字列を生成
-        sentence = make_sentences(text_model, start='', max=max_chars, min=min_chars)
-        if not sentence is None : 
-            break
+    #連鎖による文字列を生成
+    sentence = make_sentences(text_model, start='', max=max_chars, min=min_chars)
+
+    if sentence is None :
+        sentence = "何も思いつきませんでしたわ！"
 
     return sentence 
 
