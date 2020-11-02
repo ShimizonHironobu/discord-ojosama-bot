@@ -25,10 +25,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    log.info('message: ' + message.content)
-    log.info('author: ' + str(message.author))
-    log.info('id: ' + str(message.author.id))
-    log.info('----------------------------')
 
     #botがメッセージ送信したものは無視
     if message.author.id != bot.user.id :
@@ -42,11 +38,11 @@ async def on_message(message):
         # マルコフ連鎖のモデル生成用にメッセージを保存する。
         markov.add_raw_message_data(message.content)
     
-    if message.content.startswith('診断して'):
-        shindan_list = shindan_client.get_list()
-        random_index = random.randrange(0, len(shindan_list)-1, 1)
-        shindan_id = shindan_list[random_index]["id"]
-        await message.channel.send(shindan_client.request(shindan_id, name=str(random.random())))
+        if message.content.startswith('診断して'):
+            shindan_list = shindan_client.get_list()
+            random_index = random.randrange(0, len(shindan_list)-1, 1)
+            shindan_id = shindan_list[random_index]["id"]
+            await message.channel.send(shindan_client.request(shindan_id, name=str(random.random())))
 
     await bot.process_commands(message)
     
