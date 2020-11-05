@@ -11,6 +11,7 @@ from lib import (
 
 MARCOV_DATA_DIR = os.path.dirname(os.path.abspath(__file__))+'/..'+config.get('app.storage.path')+'data/markov/'
 MARCOV_RAW_DATA_NAME = 'message_data_raw.txt'
+MARCOV_PURSE_DATA_NAME = 'message_data_puese.txt'
 
 # logger = logging.getLogger(__name__)
 # fmt = "%(asctime)s %(levelname)s %(name)s :%(message)s"
@@ -45,7 +46,9 @@ def parse_text(filepath):
     for line in raw_data.split("\n"):
         parsed_text = parsed_text + MeCab.Tagger('-Owakati').parse(line)
 
-    
+    with open(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME, 'a') as f:
+        print(parsed_text, file=f)
+    f.close()
     return parsed_text
 
 def build_model(text, format=True, state_size=2):
@@ -76,28 +79,46 @@ def make_sentences(text, start=None, max=300, min=1, tries=100):
                 return sentence
 
 
-def make_markov_sentence():
+def raw_data_parse() :
+    #保存用ディレクトリがない場合は作成
+    if not os.path.isdir(MARCOV_DATA_DIR) :
+            os.makedirs(MARCOV_DATA_DIR)
+    if not os.path.exists(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME) :
+        return False
+    if not os.path.getsize(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME) :
+        return False
+
+    # 連鎖で扱えるようpurseする この操作が重い
+    parsed_text = parse_text(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME)
+    with open(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME, 'w') as f:
+        print(parsed_text, file=f)
+    f.close()
+
+    return True
+
+
+def make_markov_sentence(max_chars=20, min_chars=5):
 
     format = True
-    max_chars = 30
-    min_chars = 5
 
     #データの入ったディレクトリがなければ空文字を返す
     if not os.path.isdir(MARCOV_DATA_DIR) :
         return ''
-    if not os.path.exists(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME) :
+    if not os.path.exists(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME) :
         return ''
-    if not os.path.getsize(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME) :
+    if not os.path.getsize(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME) :
         return ''
 
-    # 連鎖で扱えるようpurseする
-    parsed_text = parse_text(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME)
+    # データを読み込み
+    f = open(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME, "r")
+    parsed_text = f.read()
+    f.close()
 
     text_model = build_model(parsed_text, format=format, state_size=3)
     # json = text_model.to_json()
     #モデルをバックアップする
 
-    # open(MARCOV_DATA_DIR + 'markov_model.json', 'w').write(json).
+    # open(MARCOV_DATA_DIR + 'markov_model.json', 'w').write(json)
 
     sentence = None
     #連鎖による文字列を生成
