@@ -97,7 +97,7 @@ def raw_data_parse() :
     return True
 
 
-def make_markov_sentence(max_chars=20, min_chars=5):
+def make_markov_sentence(max_chars=20, min_chars=5,  state_size=3):
 
     format = True
 
@@ -114,7 +114,7 @@ def make_markov_sentence(max_chars=20, min_chars=5):
     parsed_text = f.read()
     f.close()
 
-    text_model = build_model(parsed_text, format=format, state_size=3)
+    text_model = build_model(parsed_text, format=format, state_size=state_size)
     # json = text_model.to_json()
     #モデルをバックアップする
 

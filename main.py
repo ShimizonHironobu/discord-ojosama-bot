@@ -32,9 +32,14 @@ async def on_message(message):
             await message.channel.send('くたばりなさい ' + message.author.mention)
             return
         if message.content.startswith('なんとかいってくださいまし'):
-            await message.channel.send(markov.make_markov_sentence(max_chars=30, min_chars=5))
+            await message.channel.send(markov.make_markov_sentence(max_chars=30, min_chars=20, state_size=2))
             return
-            
+        if message.content.startswith('そこまで言うのならあなたが名付けてくださいます？'):
+            nickname = markov.make_markov_sentence(max_chars=5, min_chars=1, state_size=1)
+            print(markov.make_markov_sentence(max_chars=5, min_chars=1, state_size=1))
+            await message.author.edit(nick=nickname)
+            await message.channel.send("あなたの名前は今から '"+nickname+"' ですわ！！！！！")
+            return
         # マルコフ連鎖のモデル生成用にメッセージを保存する。
         markov.add_raw_message_data(message.content)
     
