@@ -11,7 +11,7 @@ from lib import (
 
 MARCOV_DATA_DIR = os.path.dirname(os.path.abspath(__file__))+'/..'+config.get('app.storage.path')+'data/markov/'
 MARCOV_RAW_DATA_NAME = 'message_data_raw.txt'
-MARCOV_PURSE_DATA_NAME = 'message_data_puese.txt'
+MARCOV_MODEL_DATA_NAME = 'message_data_model.json'
 
 # logger = logging.getLogger(__name__)
 # fmt = "%(asctime)s %(levelname)s %(name)s :%(message)s"
@@ -90,8 +90,13 @@ def raw_data_parse() :
 
     # 連鎖で扱えるようpurseする この操作が重い
     parsed_text = parse_text(MARCOV_DATA_DIR + MARCOV_RAW_DATA_NAME)
-    with open(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME, 'w') as f:
-        print(parsed_text, file=f)
+
+    format = True
+    text_model = build_model(parsed_text, format=format, state_size=3)
+    json = text_model.to_json()
+    #モデルをバックアップする
+    with open(MARCOV_DATA_DIR + MARCOV_MODEL_DATA_NAME, 'w') as f:
+        print(json, file=f)
     f.close()
 
     return True
@@ -99,22 +104,21 @@ def raw_data_parse() :
 
 def make_markov_sentence(max_chars=20, min_chars=5,  state_size=3):
 
-    format = True
-
     #データの入ったディレクトリがなければ空文字を返す
     if not os.path.isdir(MARCOV_DATA_DIR) :
         return ''
-    if not os.path.exists(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME) :
+    if not os.path.exists(MARCOV_DATA_DIR + MARCOV_MODEL_DATA_NAME) :
         return ''
-    if not os.path.getsize(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME) :
+    if not os.path.getsize(MARCOV_DATA_DIR + MARCOV_MODEL_DATA_NAME) :
         return ''
 
     # データを読み込み
-    f = open(MARCOV_DATA_DIR + MARCOV_PURSE_DATA_NAME, "r")
-    parsed_text = f.read()
+    f = open(MARCOV_DATA_DIR + MARCOV_MODEL_DATA_NAME, "r")
+    json = f.read()
     f.close()
+    text_model = markovify.Text.from_json(json)
 
-    text_model = build_model(parsed_text, format=format, state_size=state_size)
+    
     # json = text_model.to_json()
     #モデルをバックアップする
 
