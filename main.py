@@ -4,13 +4,17 @@ import discord
 import random
 import sys
 import os
+import json
+import re
+
 from discord.ext import commands
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
 from lib import (
     config,
     shindan_client,
-    log
+    log,
+    markov
 )
 
 bot = commands.Bot(command_prefix="/")
@@ -21,32 +25,29 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    log.info('message: ' + message.content)
-    log.info('author: ' + str(message.author))
-    log.info('id: ' + str(message.author.id))
-    log.info('----------------------------')
 
-    if message.content.startswith('ごきげんよう'):
-        await message.channel.send('くたばりなさい ' + message.author.mention)
-
-    # if message.author.id == 700335402736680982:
-    #     await message.channel.send('....あなたのことを愛していますわ❤️ ' + str(message.author))
-
-    # if message.content.startswith('おぱんつみせて'):
-    #     if message.author.id == 700335402736680982:
-    #         await message.channel.send('もう、恥ずかしいですわ❤️ ' + str(message.author))
-    #     else:
-    #         await message.channel.send('しね' + str(message.author))
-
-    # if message.content.startswith('おっぱいおおきいね'):
-    #     await message.channel.send('Zカップですわ')
-
+    #botがメッセージ送信したものは無視
+    if message.author.id != bot.user.id :
+        if message.content.startswith('ごきげんよう'):
+            await message.channel.send('くたばりなさい ' + message.author.mention)
+            return
+        if message.content.startswith('なんとかいってくださいまし'):
+            await message.channel.send(markov.make_markov_sentence(max_chars=30, min_chars=20, state_size=2))
+            return
+        if message.content.startswith('そこまで言うのならあなたが名付けてくださいます？'):
+            nickname = markov.make_markov_sentence(max_chars=5, min_chars=1, state_size=1)
+            print(markov.make_markov_sentence(max_chars=5, min_chars=1, state_size=1))
+            await message.author.edit(nick=nickname)
+            await message.channel.send("あなたの名前は今から '"+nickname+"' ですわ！！！！！")
+            return
+        # マルコフ連鎖のモデル生成用にメッセージを保存する。
+        markov.add_raw_message_data(message.content)
     
-    if message.content.startswith('診断して'):
-        shindan_list = shindan_client.get_list()
-        random_index = random.randrange(0, len(shindan_list)-1, 1)
-        shindan_id = shindan_list[random_index]["id"]
-        await message.channel.send(shindan_client.request(shindan_id, name=str(random.random())))
+        if message.content.startswith('診断して'):
+            shindan_list = shindan_client.get_list()
+            random_index = random.randrange(0, len(shindan_list)-1, 1)
+            shindan_id = shindan_list[random_index]["id"]
+            await message.channel.send(shindan_client.request(shindan_id, name=str(random.random())))
 
     await bot.process_commands(message)
     
@@ -110,6 +111,5 @@ async def shindan(ctx, shindan_no, name="おじょうさま"):
 
     shindan_id = shindan_list[int(shindan_no) - 1]["id"]
     await ctx.send(shindan_client.request(shindan_id, name))
-
 
 bot.run(config.get('app.discord.bot_token'))
